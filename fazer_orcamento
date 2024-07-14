@@ -1,0 +1,761 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fazer Orçamento - Garagem 87</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .container {
+            background: #ffffff;
+            padding: 20px 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .container img {
+            width: 100%;
+            max-width: 300px;
+            display: block;
+            margin: 0 auto 20px auto;
+        }
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            background-color: #d32f2f;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #9a0007;
+        }
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #d32f2f;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: calc(100% - 50px);
+            padding: 10px;
+            border: 1px solid #b2dfdb;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+            display: inline-block;
+        }
+        .form-group textarea {
+            height: 100px;
+            resize: vertical;
+        }
+        .form-group .add-product,
+        .form-group .remove-product {
+            width: 30px;
+            padding: 10px;
+            margin-left: 10px;
+            border: 1px solid #b2dfdb;
+            border-radius: 5px;
+            font-size: 16px;
+            text-align: center;
+            cursor: pointer;
+            background-color: #d32f2f;
+            color: white;
+            display: inline-block;
+        }
+        .form-group .remove-product {
+            background-color: #e57373;
+        }
+        .product-list .product-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .product-list .product-item select {
+            width: calc(100% - 100px);
+        }
+        .product-list .product-item input {
+            width: 60px;
+            margin-left: 10px;
+        }
+        .search-bar {
+            margin-bottom: 20px;
+            text-align: left;
+            width: 100%;
+            max-width: 600px;
+        }
+        .search-bar input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #b2dfdb;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        .orcamento-list {
+            width: 100%;
+            max-width: 600px;
+        }
+        .orcamento-item {
+            background: #ffffff;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .orcamento-item button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            color: #d32f2f;
+            margin-left: 10px;
+        }
+        .orcamento-item button:hover {
+            color: #9a0007;
+        }
+        .orcamento-details {
+            display: none;
+            margin-top: 10px;
+            text-align: left;
+            padding: 15px;
+            background: #ffffff;
+            border-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        .orcamento-details.active {
+            display: block;
+        }
+        .details-section {
+            margin-bottom: 15px;
+        }
+        .details-section h2 {
+            font-size: 18px;
+            color: #d32f2f;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #b2dfdb;
+            padding-bottom: 5px;
+        }
+        .details-section p {
+            margin: 5px 0;
+            font-size: 16px;
+        }
+        .details-section p span {
+            font-weight: bold;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            max-width: 600px;
+            height: auto;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 100%;
+            max-width: 500px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            box-sizing: border-box;
+            position: relative;
+        }
+        .modal-header, .modal-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .modal-header {
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .modal-footer {
+            border-top: 1px solid #e0e0e0;
+            padding-top: 10px;
+            margin-top: 20px;
+        }
+        .modal-header h2 {
+            margin: 0;
+            color: #d32f2f;
+            flex: 1 0 100%;
+        }
+        .modal-header img {
+            width: 100%;
+            max-width: 100px;
+            display: block;
+            margin: 0 auto 10px;
+        }
+        .close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+        }
+        .btn-modal {
+            background-color: #d32f2f;
+            color: white;
+            cursor: pointer;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .btn-modal:hover {
+            background-color: #9a0007;
+        }
+        .details-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            background: #f9f9f9;
+            border: 1px solid #b2dfdb;
+        }
+        .details-table th,
+        .details-table td {
+            border: 1px solid #b2dfdb;
+            padding: 8px;
+            text-align: left;
+        }
+        .details-table th {
+            background-color: #d32f2f;
+            color: white;
+        }
+        .details-table td {
+            background-color: #e0f2f1;
+        }
+        .details-table .header {
+            background-color: #9a0007;
+            color: white;
+            text-align: center;
+            font-weight: bold;
+        }
+        .details-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .details-header .close {
+            font-size: 20px;
+            cursor: pointer;
+        }
+        .btn-enviar {
+            background-color: #d32f2f;
+            color: white;
+            cursor: pointer;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+            display: block;
+            width: 100%;
+        }
+        .btn-enviar:hover {
+            background-color: #9a0007;
+        }
+        .orcamento-item span {
+            cursor: pointer;
+        }
+        .orcamento-confirmado {
+            color: green;
+            font-size: 18px;
+            margin-left: 10px;
+        }
+        @media (max-width: 600px) {
+            .modal-content {
+                width: 90%;
+                padding: 10px;
+            }
+            .modal-header h2, .modal-header img {
+                text-align: center;
+            }
+            .details-table th, .details-table td {
+                padding: 4px;
+            }
+            .details-section p {
+                font-size: 14px;
+            }
+            .details-section h2 {
+                font-size: 16px;
+            }
+        }
+        .print-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #d32f2f;
+        }
+        .print-btn:hover {
+            color: #9a0007;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+</head>
+<body>
+    <div class="container" id="pdf-content">
+        <img src="LogoGaragem87.png" alt="Logo da Garagem87">
+        <h1>Fazer Orçamento</h1>
+        <form id="orcamento-form" onsubmit="enviarOrcamento(event)">
+            <div class="form-group">
+                <label for="nome-cliente">Nome do Cliente:</label>
+                <select id="nome-cliente" name="nome-cliente">
+                    <option value="">Nenhum Cliente</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Produtos:</label>
+                <div class="product-list" id="product-list">
+                    <div class="product-item">
+                        <select name="produtos">
+                            <option value="">Nenhum Produto</option>
+                        </select>
+                        <input type="number" name="quantidade" min="1">
+                        <div class="add-product" onclick="adicionarProduto()">+</div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="descricao-servico">Serviços:</label>
+                <textarea id="descricao-servico" name="descricao-servico" placeholder="Descreva o que foi feito"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="servico">Valor da Mão de Obra:</label>
+                <input type="number" id="servico" name="servico" min="0" step="0.01" required>
+            </div>
+            <button type="submit" class="btn">Salvar Orçamento</button>
+        </form>
+    </div>
+
+    <div class="search-bar">
+        <input type="text" id="search-bar" placeholder="Buscar orçamento pelo nome do cliente" oninput="buscarOrcamentos(event)">
+    </div>
+
+    <div class="orcamento-list" id="orcamento-list">
+    </div>
+
+    <div id="modalConfirmacao" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Confirmação</h2>
+                <span class="close" onclick="fecharModal('modalConfirmacao')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p id="modalConfirmacaoTexto"></p>
+            </div>
+            <div class="modal-footer">
+                <button id="confirmarAcao" class="btn-modal">Confirmar</button>
+                <button class="btn-modal" onclick="fecharModal('modalConfirmacao')">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalDetalhes" class="modal">
+        <div class="modal-content">
+            <span class="print-btn" onclick="printOrcamento()"><i class="fas fa-print"></i></span>
+            <div class="modal-header">
+                <img src="LogoGaragem87.png" alt="Logo da Garagem87">
+                <h2>Detalhes do Orçamento</h2>
+                <div id="data-confirmacao" style="position: absolute; top: 10px; right: 10px; font-size: 12px; color: gray;"></div>
+                <span class="close" onclick="fecharModal('modalDetalhes')">&times;</span>
+            </div>
+            <div class="modal-body" id="detalhes-modal-body">
+            </div>
+        </div>
+    </div>
+<script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js"></script>
+<script>
+    const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "garagem87-c652e.firebaseapp.com",
+    projectId: "garagem87-c652e",
+    storageBucket: "garagem87-c652e.appspot.com",
+    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+    appId: "YOUR_APP_ID",
+    measurementId: "YOUR_MEASUREMENT_ID"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+let produtos = [];
+let clientes = [];
+let orcamentos = [];
+let acaoConfirmada = null;
+
+function carregarProdutos() {
+    db.collection("produtos").get().then((querySnapshot) => {
+        produtos = querySnapshot.docs.map(doc => {
+            const data = doc.data();
+            const preco = parseFloat(data.valor);
+            return {
+                id: doc.id,
+                produto: data.produto,
+                preco: isNaN(preco) ? 0 : preco,
+                estoque: data.estoque
+            };
+        });
+        const productSelects = document.querySelectorAll('select[name="produtos"]');
+        productSelects.forEach(select => {
+            const selectedValue = select.value; 
+            select.innerHTML = '<option value="">Nenhum Produto</option>';
+            produtos.forEach(produto => {
+                const preco = produto.preco.toFixed(2);
+                const option = document.createElement('option');
+                option.value = produto.produto;
+                option.textContent = `${produto.produto} - R$ ${preco}`;
+                select.appendChild(option);
+            });
+            select.value = selectedValue; 
+        });
+    }).catch(error => {
+        console.error("Erro ao carregar produtos:", error);
+    });
+}
+
+function carregarClientes() {
+    db.collection("clientes").get().then((querySnapshot) => {
+        clientes = querySnapshot.docs.map(doc => doc.data());
+        const clienteSelect = document.getElementById('nome-cliente');
+        clienteSelect.innerHTML = '<option value="">Nenhum Cliente</option>';
+        clientes.forEach(cliente => {
+            const option = document.createElement('option');
+            option.value = cliente.nome;
+            option.textContent = cliente.nome;
+            clienteSelect.appendChild(option);
+        });
+    }).catch(error => {
+        console.error("Erro ao carregar clientes:", error);
+    });
+}
+
+function adicionarProduto() {
+    const productList = document.getElementById('product-list');
+    const productItem = document.createElement('div');
+    productItem.className = 'product-item';
+    productItem.innerHTML = `
+        <select name="produtos">
+            <option value="">Nenhum Produto</option>
+        </select>
+        <input type="number" name="quantidade" min="1">
+        <div class="add-product" onclick="adicionarProduto()">+</div>
+        <div class="remove-product" onclick="removerProduto(this)">-</div>
+    `;
+    productList.appendChild(productItem);
+    carregarProdutos();
+}
+
+function removerProduto(element) {
+    element.parentNode.remove();
+}
+
+function enviarOrcamento(event) {
+    event.preventDefault();
+    const form = document.getElementById('orcamento-form');
+    const nomeCliente = form['nome-cliente'].value || '';
+    const servico = parseFloat(form.servico.value);
+    const descricaoServico = form['descricao-servico'].value || '';
+    const produtosSelecionados = Array.from(form.querySelectorAll('select[name="produtos"]'))
+        .map((select, index) => {
+            const produtoNome = select.value.split(' - ')[0];
+            const produto = produtos.find(prod => prod.produto === produtoNome);
+            if (!produto) {
+                return null;
+            }
+            const quantidade = parseInt(form.querySelectorAll('input[name="quantidade"]')[index].value);
+            if (isNaN(quantidade) || quantidade <= 0) {
+                return null;
+            }
+            return {
+                id: produto.id,
+                produto: produto.produto,
+                quantidade,
+                preco: produto.preco
+            };
+        })
+        .filter(item => item !== null); 
+
+    const valorTotalProdutos = produtosSelecionados.reduce((total, item) => {
+        return total + item.preco * item.quantidade;
+    }, 0);
+
+    const valorTotal = parseFloat(servico) + valorTotalProdutos;
+
+    const orcamento = {
+        nomeCliente,
+        servico,
+        descricaoServico,
+        valorTotalProdutos: isNaN(valorTotalProdutos) ? 0 : valorTotalProdutos,
+        valorTotal: isNaN(valorTotal) ? 0 : valorTotal,
+        produtos: produtosSelecionados,
+        confirmado: false,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+    };
+
+    db.collection("orcamentos").add(orcamento).then(() => {
+        form.reset();
+        carregarOrcamentos();
+    }).catch(error => {
+        console.error("Erro ao salvar orçamento:", error);
+    });
+}
+
+function carregarOrcamentos() {
+    db.collection("orcamentos").orderBy("timestamp", "desc").get().then((querySnapshot) => {
+        orcamentos = querySnapshot.docs.map(doc => {
+            return { id: doc.id, ...doc.data() };
+        });
+        exibirOrcamentos();
+    }).catch(error => {
+        console.error("Erro ao carregar orçamentos:", error);
+    });
+}
+
+async function obterCliente(nomeCliente) {
+    const clienteSnapshot = await db.collection("clientes").where("nome", "==", nomeCliente).get();
+    if (!clienteSnapshot.empty) {
+        return clienteSnapshot.docs[0].data();
+    }
+    return null;
+}
+
+async function obterProduto(produtoNome) {
+    const produtoSnapshot = await db.collection("produtos").where("produto", "==", produtoNome).get();
+    if (!produtoSnapshot.empty) {
+        return produtoSnapshot.docs[0].data();
+    }
+    return null;
+}
+
+async function verDetalhes(id) {
+    const orcamento = orcamentos.find(orc => orc.id === id);
+    const cliente = await obterCliente(orcamento.nomeCliente);
+    const produtosDetalhados = await Promise.all(orcamento.produtos.map(async item => {
+        const produto = await obterProduto(item.produto);
+        return {
+            ...item,
+            preco: produto ? parseFloat(produto.valor) : 0
+        };
+    }));
+
+    let dataConfirmacao = "";
+    if (orcamento.confirmado && orcamento.timestamp) {
+        const timestamp = orcamento.timestamp.toDate();
+        dataConfirmacao = `${timestamp.getDate().toString().padStart(2, '0')}/${(timestamp.getMonth() + 1).toString().padStart(2, '0')}/${timestamp.getFullYear()}`;
+        document.getElementById('data-confirmacao').innerText = `Confirmado em: ${dataConfirmacao}`;
+    }
+
+    const detalhesModalBody = document.getElementById('detalhes-modal-body');
+    detalhesModalBody.innerHTML = `
+        <div id="orcamento-detalhes">
+            <div class="details-header">
+                <h2>Detalhes do Orçamento</h2>
+            </div>
+            <div class="details-section">
+                <h2>Cliente</h2>
+                <p><span>Nome:</span> ${orcamento.nomeCliente || ''}</p>
+                <p><span>Carro:</span> ${cliente ? cliente.carro : ''}</p>
+                <p><span>Placa:</span> ${cliente ? cliente.placa : ''}</p>
+                <p><span>Ano do Veículo:</span> ${cliente ? cliente.ano : ''}</p>
+                <p><span>Hodômetro:</span> ${cliente && cliente.hodometro !== undefined ? cliente.hodometro : ''}</p>
+            </div>
+            <div class="details-section">
+                <h2>Produtos</h2>
+                <table class="details-table">
+                    <thead>
+                        <tr>
+                            <th>Quantidade</th>
+                            <th>Descrição</th>
+                            <th>Valor</th>
+                            <th>Valor Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${produtosDetalhados.map(produto => `
+                        <tr>
+                            <td>${produto.quantidade}</td>
+                            <td>${produto.produto}</td>
+                            <td>R$ ${produto.preco.toFixed(2)}</td>
+                            <td>R$ ${(produto.preco * produto.quantidade).toFixed(2)}</td>
+                        `).join('')}
+                    </tbody>
+                </table>
+            </div>
+            <div class="details-section">
+                <h2>Mão de obra</h2>
+                <p><span>Descrição:</span> ${orcamento.descricaoServico}</p>
+                <p><span>Valor:</span> R$ ${orcamento.servico.toFixed(2)}</p>
+            </div>
+            <div class="details-section">
+                <h2>Totais</h2>
+                <p><span>Valor Total:</span> <span style="font-size: 18px; font-weight: bold;">R$ ${orcamento.valorTotal.toFixed(2)}</span></p>
+            </div>
+        </div>
+    `;
+    abrirModal('modalDetalhes');
+}
+
+function abrirModalConfirmacao(acao, id) {
+    const modalTexto = {
+        excluir: "Tem certeza que deseja excluir este orçamento?",
+        confirmar: "Tem certeza que deseja confirmar este orçamento?"
+    };
+    document.getElementById('modalConfirmacaoTexto').innerText = modalTexto[acao];
+    document.getElementById('confirmarAcao').onclick = function() {
+        if (acao === 'excluir') {
+            excluirOrcamento(id);
+        } else if (acao === 'confirmar') {
+            confirmarOrcamento(id);
+        }
+        fecharModal('modalConfirmacao');
+    };
+    abrirModal('modalConfirmacao');
+}
+
+async function confirmarOrcamento(id) {
+    const orcamentoRef = db.collection("orcamentos").doc(id);
+    await orcamentoRef.update({
+        confirmado: true,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+    });
+
+    orcamentos.find(orc => orc.id === id).produtos.forEach(item => {
+        const produtoRef = db.collection("produtos").doc(item.id);
+        produtoRef.update({
+            quantidade: firebase.firestore.FieldValue.increment(-item.quantidade)
+        }).then(() => {
+            console.log("Quantidade do produto atualizada com sucesso!");
+        }).catch(error => {
+            console.error("Erro ao atualizar quantidade do produto:", error);
+        });
+    });
+
+    carregarOrcamentos();
+}
+
+function excluirOrcamento(id) {
+    const orcamentoRef = db.collection("orcamentos").doc(id);
+    orcamentoRef.delete().then(() => {
+        carregarOrcamentos();
+    }).catch(error => {
+        console.error("Erro ao excluir orçamento:", error);
+    });
+}
+
+function abrirModal(modalId) {
+    document.getElementById(modalId).style.display = 'block';
+}
+
+function fecharModal(modalId) {
+    document.getElementById(modalId).style.display = 'none';
+}
+
+function exibirOrcamentos(filtro = "") {
+    const orcamentoList = document.getElementById('orcamento-list');
+    orcamentoList.innerHTML = '';
+    orcamentos
+        .filter(orcamento => orcamento.nomeCliente.toLowerCase().includes(filtro.toLowerCase()))
+        .sort((a, b) => b.timestamp - a.timestamp)
+        .forEach(async orcamento => {
+            const cliente = await obterCliente(orcamento.nomeCliente);
+            let dataConfirmacao = "";
+            if (orcamento.confirmado && orcamento.timestamp) {
+                const timestamp = orcamento.timestamp.toDate();
+                dataConfirmacao = `${timestamp.getDate().toString().padStart(2, '0')}/${(timestamp.getMonth() + 1).toString().padStart(2, '0')}/${timestamp.getFullYear()}`;
+            }
+            const orcamentoItem = document.createElement('div');
+            orcamentoItem.className = 'orcamento-item';
+            orcamentoItem.innerHTML = `
+                <span onclick="verDetalhes('${orcamento.id}')">${orcamento.nomeCliente || ''} - ${cliente ? cliente.carro : ''}</span>
+                <div>
+                    ${orcamento.confirmado ? `<span class="orcamento-confirmado">Confirmado em: ${dataConfirmacao}</span>` : `
+                    <button onclick="abrirModalConfirmacao('confirmar', '${orcamento.id}')"><i class="fas fa-check"></i></button>
+                    `}
+                    <button onclick="abrirModalConfirmacao('excluir', '${orcamento.id}')"><i class="fas fa-trash"></i></button>
+                </div>
+            `;
+            orcamentoList.appendChild(orcamentoItem);
+        });
+}
+
+function buscarOrcamentos(event) {
+    const filtro = event.target.value;
+    exibirOrcamentos(filtro);
+}
+
+function printOrcamento() {
+    const modalContent = document.querySelector('#modalDetalhes .modal-content');
+    html2canvas(modalContent, { scale: 2, scrollY: -window.scrollY }).then(canvas => {
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jspdf.jsPDF('p', 'mm', 'a4');
+        pdf.addImage(imgData, 'PNG', 0, 0, 210, 297);
+        pdf.save('detalhes_orcamento.pdf');
+    });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    carregarProdutos();
+    carregarClientes();
+    carregarOrcamentos();
+});
+
+</script>
+</body>
+</html>
