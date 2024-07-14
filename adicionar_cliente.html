@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adicionar Cliente - Garagem 87</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .container {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+        }
+        .container img {
+            width: 100%;
+            max-width: 300px;
+            display: block;
+            margin: 0 auto 10px auto;
+            animation: glow 1.5s infinite alternate;
+        }
+        @keyframes glow {
+            0% {
+                box-shadow: 0 0 5px #d32f2f;
+            }
+            100% {
+                box-shadow: 0 0 20px #d32f2f;
+            }
+        }
+        .container h2 {
+            text-align: center;
+            color: #d32f2f;
+            margin-bottom: 20px;
+        }
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            background-color: #d32f2f;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            transition: background-color 0.3s;
+            text-align: center;
+        }
+        .btn:hover {
+            background-color: #9a0007;
+        }
+        .search-container {
+            margin-bottom: 20px;
+        }
+        #buscar-cliente {
+            width: 100%;
+            padding: 12px;
+            box-sizing: border-box;
+            border: 1px solid #b2dfdb;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        .lista-cabecalho {
+            display: none;
+        }
+        #lista-clientes {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        #lista-clientes li {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 10px;
+            margin: 5px 0;
+            background: #ffffff;
+            border-radius: 5px;
+            border: 1px solid #b2dfdb;
+            transition: box-shadow 0.3s, transform 0.3s;
+        }
+        #lista-clientes li:hover {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transform: translateY(-5px);
+        }
+        #lista-clientes li span {
+            display: block;
+            width: 100%;
+            font-weight: bold;
+            color: #d32f2f;
+            padding: 5px 0;
+        }
+        #lista-clientes li .icon-remove {
+            color: #e57373;
+            font-size: 20px;
+            cursor: pointer;
+            transition: color 0.3s;
+            align-self: flex-end;
+        }
+        #lista-clientes li .icon-remove:hover {
+            color: #d32f2f;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            max-width: 400px;
+            height: auto;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+            padding-top: 60px;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 350px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .modal-header, .modal-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modal-header {
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .modal-footer {
+            border-top: 1px solid #e0e0e0;
+            padding-top: 10px;
+            margin-top: 20px;
+        }
+        .modal-header h2 {
+            margin: 0;
+            color: #d32f2f;
+        }
+        .close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            margin-bottom: 5px;
+            color: #d32f2f;
+            font-weight: bold;
+        }
+        .form-group input {
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #b2dfdb;
+            border-radius: 5px;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        .btn-modal {
+            background-color: #d32f2f;
+            color: white;
+            cursor: pointer;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        .btn-modal:hover {
+            background-color: #9a0007;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="LogoGaragem87.png" alt="Logo da Garagem87">
+        <h2>Cadastro de Cliente</h2>
+        <button class="btn" onclick="abrirModalAdicionar()">Adicionar Cliente</button>
+        <div class="search-container">
+            <input type="text" id="buscar-cliente" onkeyup="filtrarClientes()" placeholder="Buscar cliente...">
+        </div>
+        <ul id="lista-clientes">
+            <!-- Lista de clientes adicionados -->
+        </ul>
+    </div>
+
+    <!-- Modal Adicionar Cliente -->
+    <div id="modalAdicionarCliente" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Adicionar Cliente</h2>
+                <span class="close" onclick="fecharModalAdicionar()">&times;</span>
+            </div>
+            <form id="form-cliente">
+                <div class="form-group">
+                    <label for="nome">Nome:</label>
+                    <input type="text" id="nome" name="nome" required>
+                </div>
+                <div class="form-group">
+                    <label for="carro">Carro:</label>
+                    <input type="text" id="carro" name="carro" required>
+                </div>
+                <div class="form-group">
+                    <label for="cor">Cor do Veículo:</label>
+                    <input type="text" id="cor" name="cor" required>
+                </div>
+                <div class="form-group">
+                    <label for="placa">Placa do Carro:</label>
+                    <input type="text" id="placa" name="placa" required>
+                </div>
+                <div class="form-group">
+                    <label for="ano">Ano do Veículo:</label>
+                    <input type="number" id="ano" name="ano" required>
+                </div>
+                <div class="form-group">
+                    <label for="hodometro">Hodômetro do Veículo:</label>
+                    <input type="number" id="hodometro" name="hodometro" required>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-modal" onclick="adicionarCliente()">Salvar Cliente</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Editar Cliente -->
+    <div id="modalEditarCliente" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Editar Cliente</h2>
+                <span class="close" onclick="fecharModalEditar()">&times;</span>
+            </div>
+            <form id="form-editar-cliente">
+                <input type="hidden" id="editar-index">
+                <div class="form-group">
+                    <label for="editar-nome">Nome:</label>
+                    <input type="text" id="editar-nome" name="editar-nome" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="editar-carro">Carro:</label>
+                    <input type="text" id="editar-carro" name="editar-carro" required>
+                </div>
+                <div class="form-group">
+                    <label for="editar-cor">Cor do Veículo:</label>
+                    <input type="text" id="editar-cor" name="editar-cor" required>
+                </div>
+                <div class="form-group">
+                    <label for="editar-placa">Placa do Carro:</label>
+                    <input type="text" id="editar-placa" name="editar-placa" required>
+                </div>
+                <div class="form-group">
+                    <label for="editar-ano">Ano do Veículo:</label>
+                    <input type="number" id="editar-ano" name="editar-ano" required>
+                </div>
+                <div class="form-group">
+                    <label for="editar-hodometro">Hodômetro do Veículo:</label>
+                    <input type="number" id="editar-hodometro" name="editar-hodometro" required>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-modal" onclick="salvarCliente()">Salvar Alterações</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Remover Cliente -->
+    <div id="modalRemoverCliente" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Remover Cliente</h2>
+                <span class="close" onclick="fecharModalRemover()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p>Tem certeza que deseja remover este cliente?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-modal" onclick="removerClienteConfirmado()">Sim</button>
+                <button type="button" class="btn-modal" onclick="fecharModalRemover()">Não</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase Configuration -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js"></script>
+    <script>
+        const firebaseConfig = {
+           apiKey: "YOUR_API_KEY",
+           authDomain: "garagem87-c652e.firebaseapp.com",
+           databaseURL: "https://garagem87-c652e-default-rtdb.firebaseio.com",
+           projectId: "garagem87-c652e",
+           storageBucket: "garagem87-c652e.appspot.com",
+           messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+           appId: "YOUR_APP_ID",
+           measurementId: "YOUR_MEASUREMENT_ID"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        function adicionarCliente() {
+            const nome = document.getElementById('nome').value;
+            const carro = document.getElementById('carro').value;
+            const cor = document.getElementById('cor').value;
+            const placa = document.getElementById('placa').value;
+            const ano = document.getElementById('ano').value;
+            const hodometro = document.getElementById('hodometro').value;
+
+            if (nome && carro && cor && placa && ano && hodometro) {
+                const cliente = { nome, carro, cor, placa, ano, hodometro };
+                db.collection("clientes").add(cliente).then(() => {
+                    atualizarListaClientes();
+                    document.getElementById('form-cliente').reset();
+                    fecharModalAdicionar();
+                }).catch((error) => {
+                    console.error("Error adding document: ", error);
+                });
+            } else {
+                alert("Por favor, preencha todos os campos.");
+            }
+        }
+
+        function atualizarListaClientes() {
+            const listaClientes = document.getElementById('lista-clientes');
+            listaClientes.innerHTML = '';
+            db.collection("clientes").orderBy("nome").get().then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    const cliente = doc.data();
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <span>Nome: ${cliente.nome}</span>
+                        <span>Carro: ${cliente.carro}</span>
+                        <span>Cor: ${cliente.cor}</span>
+                        <span>Placa: ${cliente.placa}</span>
+                        <span class="icon-remove" onclick="abrirModalRemover('${doc.id}', event)"><i class="fas fa-trash"></i></span>
+                    `;
+                    li.onclick = () => abrirModalEditar(doc.id);
+                    listaClientes.appendChild(li);
+                });
+            });
+        }
+
+        function abrirModalAdicionar() {
+            document.getElementById('modalAdicionarCliente').style.display = 'block';
+        }
+
+        function fecharModalAdicionar() {
+            document.getElementById('modalAdicionarCliente').style.display = 'none';
+        }
+
+        function abrirModalEditar(id) {
+            const docRef = db.collection("clientes").doc(id);
+            docRef.get().then((doc) => {
+                if (doc.exists) {
+                    const cliente = doc.data();
+                    document.getElementById('editar-index').value = id;
+                    document.getElementById('editar-nome').value = cliente.nome;
+                    document.getElementById('editar-carro').value = cliente.carro;
+                    document.getElementById('editar-cor').value = cliente.cor;
+                    document.getElementById('editar-placa').value = cliente.placa;
+                    document.getElementById('editar-ano').value = cliente.ano;
+                    document.getElementById('editar-hodometro').value = cliente.hodometro;
+                    document.getElementById('modalEditarCliente').style.display = 'block';
+                } else {
+                    console.log("No such document!");
+                }
+            }).catch((error) => {
+                console.log("Error getting document:", error);
+            });
+        }
+
+        function fecharModalEditar() {
+            document.getElementById('modalEditarCliente').style.display = 'none';
+        }
+
+        function abrirModalRemover(id, event) {
+            event.stopPropagation();
+            clienteParaRemover = id;
+            document.getElementById('modalRemoverCliente').style.display = 'block';
+        }
+
+        function fecharModalRemover() {
+            document.getElementById('modalRemoverCliente').style.display = 'none';
+        }
+
+        function removerClienteConfirmado() {
+            db.collection("clientes").doc(clienteParaRemover).delete().then(() => {
+                atualizarListaClientes();
+                fecharModalRemover();
+            }).catch((error) => {
+                console.error("Error removing document: ", error);
+            });
+        }
+
+        function salvarCliente() {
+            const id = document.getElementById('editar-index').value;
+            const carro = document.getElementById('editar-carro').value;
+            const cor = document.getElementById('editar-cor').value;
+            const placa = document.getElementById('editar-placa').value;
+            const ano = document.getElementById('editar-ano').value;
+            const hodometro = document.getElementById('editar-hodometro').value;
+
+            if (carro && cor && placa && ano && hodometro) {
+                db.collection("clientes").doc(id).update({
+                    carro,
+                    cor,
+                    placa,
+                    ano,
+                    hodometro
+                }).then(() => {
+                    atualizarListaClientes();
+                    fecharModalEditar();
+                }).catch((error) => {
+                    console.error("Error updating document: ", error);
+                });
+            } else {
+                alert("Por favor, preencha todos os campos.");
+            }
+        }
+
+        function filtrarClientes() {
+            const input = document.getElementById('buscar-cliente');
+            const filter = input.value.toUpperCase();
+            const ul = document.getElementById('lista-clientes');
+            const li = ul.getElementsByTagName('li');
+
+            for (let i = 0; i < li.length; i++) {
+                const txtValue = li[i].textContent || li[i].innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    li[i].style.display = "";
+                } else {
+                    li[i].style.display = "none";
+                }
+            }
+        }
+
+        window.onclick = function(event) {
+            const modalAdicionar = document.getElementById('modalAdicionarCliente');
+            const modalEditar = document.getElementById('modalEditarCliente');
+            const modalRemover = document.getElementById('modalRemoverCliente');
+            if (event.target == modalAdicionar) {
+                modalAdicionar.style.display = "none";
+            }
+            if (event.target == modalEditar) {
+                modalEditar.style.display = "none";
+            }
+            if (event.target == modalRemover) {
+                modalRemover.style.display = "none";
+            }
+        }
+
+        window.onload = atualizarListaClientes;
+    </script>
+</body>
+</html>
