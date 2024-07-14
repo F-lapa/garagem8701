@@ -97,8 +97,9 @@
         }
         #lista-produtos li {
             display: flex;
-            flex-direction: column; /* Alterado para coluna para se adaptar melhor ao mobile */
-            padding: 10px;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px; /* Diminuir o padding */
             margin: 5px 0;
             background: #ffffff;
             border-radius: 5px;
@@ -109,13 +110,14 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
         #lista-produtos li span {
+            flex: 1;
             text-align: center;
             font-weight: bold;
             color: #d32f2f; /* Cor combinando com o logotipo */
         }
         .icon-remove {
             color: #e57373;
-            font-size: 20px;
+            font-size: 18px; /* Diminuir o tamanho do ícone */
             cursor: pointer;
             transition: color 0.3s;
         }
