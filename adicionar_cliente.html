@@ -526,15 +526,17 @@
 
         function abrirHistoricoServicos(id, event) {
             event.stopPropagation();
+            console.log(`Cliente ID: ${id}`); // Log para depuração
             const historicoContainer = document.getElementById('historico-servicos-container');
             historicoContainer.innerHTML = '';
             db.collection("orcamentos").where("clienteId", "==", id).where("confirmado", "==", true).get().then((querySnapshot) => {
-                console.log("Orçamentos encontrados: ", querySnapshot.size);
+                console.log("Orçamentos encontrados: ", querySnapshot.size); // Log para depuração
                 if (querySnapshot.empty) {
                     historicoContainer.innerHTML = '<p>Nenhum histórico de serviço encontrado.</p>';
                 } else {
                     querySnapshot.forEach((doc) => {
                         const servico = doc.data();
+                        console.log(servico); // Log para depuração
                         const div = document.createElement('div');
                         div.classList.add('service-history-item');
                         div.innerHTML = `
