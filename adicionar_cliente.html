@@ -338,15 +338,15 @@
         </div>
     </div>
 
-    <!-- Modal Histórico de Serviços -->
-    <div id="modalHistoricoServicos" class="modal">
+    <!-- Modal Histórico de Orçamentos -->
+    <div id="modalHistoricoOrcamentos" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Histórico de Serviços</h2>
+                <h2>Histórico de Orçamentos</h2>
                 <span class="close" onclick="fecharModalHistorico()">&times;</span>
             </div>
-            <div id="historico-servicos-container" class="modal-body">
-                <!-- Lista de serviços confirmados será inserida aqui -->
+            <div id="historico-orcamentos-container" class="modal-body">
+                <!-- Lista de orçamentos confirmados será inserida aqui -->
             </div>
         </div>
     </div>
@@ -404,7 +404,7 @@
                         <span>Cor: ${cliente.cor}</span>
                         <span>Placa: ${cliente.placa}</span>
                         <span class="icon-remove" onclick="abrirModalRemover('${doc.id}', event)"><i class="fas fa-trash"></i></span>
-                        <span class="icon-history" onclick="abrirHistoricoServicos('${doc.id}', event)"><i class="fas fa-history"></i></span>
+                        <span class="icon-history" onclick="abrirHistoricoOrcamentos('${doc.id}', event)"><i class="fas fa-history"></i></span>
                     `;
                     li.onclick = () => abrirModalEditar(doc.id);
                     listaClientes.appendChild(li);
@@ -524,25 +524,25 @@
             }
         }
 
-        function abrirHistoricoServicos(id, event) {
+        function abrirHistoricoOrcamentos(id, event) {
             event.stopPropagation();
             console.log(`Cliente ID: ${id}`); // Log para depuração
-            const historicoContainer = document.getElementById('historico-servicos-container');
+            const historicoContainer = document.getElementById('historico-orcamentos-container');
             historicoContainer.innerHTML = '';
             db.collection("orcamentos").where("clienteId", "==", id).where("confirmado", "==", true).get().then((querySnapshot) => {
                 console.log("Orçamentos encontrados: ", querySnapshot.size); // Log para depuração
                 if (querySnapshot.empty) {
-                    historicoContainer.innerHTML = '<p>Nenhum histórico de serviço encontrado.</p>';
+                    historicoContainer.innerHTML = '<p>Nenhum histórico de orçamento encontrado.</p>';
                 } else {
                     querySnapshot.forEach((doc) => {
-                        const servico = doc.data();
-                        console.log(servico); // Log para depuração
+                        const orcamento = doc.data();
+                        console.log(orcamento); // Log para depuração
                         const div = document.createElement('div');
                         div.classList.add('service-history-item');
                         div.innerHTML = `
-                            <p>Data: ${new Date(servico.data.seconds * 1000).toLocaleDateString('pt-BR')}</p>
-                            <p>Serviço: ${servico.servico}</p>
-                            <p>Valor: R$ ${servico.valor}</p>
+                            <p>Data: ${new Date(orcamento.data.seconds * 1000).toLocaleDateString('pt-BR')}</p>
+                            <p>Serviço: ${orcamento.servico}</p>
+                            <p>Valor: R$ ${orcamento.valor}</p>
                         `;
                         historicoContainer.appendChild(div);
                     });
@@ -550,16 +550,16 @@
             }).catch((error) => {
                 console.log("Error getting documents: ", error);
             });
-            document.getElementById('modalHistoricoServicos').style.display = 'block';
+            document.getElementById('modalHistoricoOrcamentos').style.display = 'block';
             setTimeout(() => {
-                document.getElementById('modalHistoricoServicos').classList.add('modal-show');
+                document.getElementById('modalHistoricoOrcamentos').classList.add('modal-show');
             }, 10);
         }
 
         function fecharModalHistorico() {
-            document.getElementById('modalHistoricoServicos').classList.remove('modal-show');
+            document.getElementById('modalHistoricoOrcamentos').classList.remove('modal-show');
             setTimeout(() => {
-                document.getElementById('modalHistoricoServicos').style.display = 'none';
+                document.getElementById('modalHistoricoOrcamentos').style.display = 'none';
             }, 500);
         }
 
@@ -567,7 +567,7 @@
             const modalAdicionar = document.getElementById('modalAdicionarCliente');
             const modalEditar = document.getElementById('modalEditarCliente');
             const modalRemover = document.getElementById('modalRemoverCliente');
-            const modalHistorico = document.getElementById('modalHistoricoServicos');
+            const modalHistorico = document.getElementById('modalHistoricoOrcamentos');
             if (event.target == modalAdicionar) {
                 fecharModalAdicionar();
             }
