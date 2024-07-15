@@ -529,6 +529,7 @@
             const historicoContainer = document.getElementById('historico-servicos-container');
             historicoContainer.innerHTML = '';
             db.collection("orcamentos").where("clienteId", "==", id).where("confirmado", "==", true).get().then((querySnapshot) => {
+                console.log("Orçamentos encontrados: ", querySnapshot.size);
                 if (querySnapshot.empty) {
                     historicoContainer.innerHTML = '<p>Nenhum histórico de serviço encontrado.</p>';
                 } else {
