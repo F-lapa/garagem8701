@@ -109,15 +109,19 @@
             padding: 5px 0;
             font-size: 14px; /* Diminuir o tamanho da fonte */
         }
-        #lista-clientes li .icon-remove {
+        #lista-clientes li .icon-remove, #lista-clientes li .icon-history {
             color: #e57373;
             font-size: 18px; /* Diminuir o tamanho do ícone */
             cursor: pointer;
             transition: color 0.3s;
             align-self: flex-end;
+            margin-left: 10px;
         }
         #lista-clientes li .icon-remove:hover {
             color: #d32f2f;
+        }
+        #lista-clientes li .icon-history:hover {
+            color: #1e88e5;
         }
         .modal {
             display: none;
@@ -322,6 +326,21 @@
         </div>
     </div>
 
+    <!-- Modal Histórico de Orçamentos -->
+    <div id="modalHistoricoOrcamentos" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Histórico de Orçamentos</h2>
+                <span class="close" onclick="fecharModalHistoricoOrcamentos()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <ul id="lista-orcamentos">
+                    <!-- Lista de orçamentos -->
+                </ul>
+            </div>
+        </div>
+    </div>
+
     <!-- Firebase Configuration -->
     <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js"></script>
@@ -375,6 +394,7 @@
                         <span>Cor: ${cliente.cor}</span>
                         <span>Placa: ${cliente.placa}</span>
                         <span class="icon-remove" onclick="abrirModalRemover('${doc.id}', event)"><i class="fas fa-trash"></i></span>
+                        <span class="icon-history" onclick="abrirModalHistoricoOrcamentos('${doc.id}', event)"><i class="fas fa-history"></i></span>
                     `;
                     li.onclick = () => abrirModalEditar(doc.id);
                     listaClientes.appendChild(li);
@@ -494,10 +514,40 @@
             }
         }
 
+        function abrirModalHistoricoOrcamentos(clienteId, event) {
+            event.stopPropagation();
+            const listaOrcamentos = document.getElementById('lista-orcamentos');
+            listaOrcamentos.innerHTML = '';
+            db.collection("orcamentos").where("clienteId", "==", clienteId).where("status", "==", "confirmado").get().then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    const orcamento = doc.data();
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <span>Serviço: ${orcamento.servico}</span>
+                        <span>Valor: R$${orcamento.valor}</span>
+                        <span>Data: ${new Date(orcamento.data.seconds * 1000).toLocaleDateString()}</span>
+                    `;
+                    listaOrcamentos.appendChild(li);
+                });
+            });
+            document.getElementById('modalHistoricoOrcamentos').style.display = 'block';
+            setTimeout(() => {
+                document.getElementById('modalHistoricoOrcamentos').classList.add('modal-show');
+            }, 10);
+        }
+
+        function fecharModalHistoricoOrcamentos() {
+            document.getElementById('modalHistoricoOrcamentos').classList.remove('modal-show');
+            setTimeout(() => {
+                document.getElementById('modalHistoricoOrcamentos').style.display = 'none';
+            }, 500);
+        }
+
         window.onclick = function(event) {
             const modalAdicionar = document.getElementById('modalAdicionarCliente');
             const modalEditar = document.getElementById('modalEditarCliente');
             const modalRemover = document.getElementById('modalRemoverCliente');
+            const modalHistoricoOrcamentos = document.getElementById('modalHistoricoOrcamentos');
             if (event.target == modalAdicionar) {
                 fecharModalAdicionar();
             }
@@ -506,6 +556,9 @@
             }
             if (event.target == modalRemover) {
                 fecharModalRemover();
+            }
+            if (event.target == modalHistoricoOrcamentos) {
+                fecharModalHistoricoOrcamentos();
             }
         }
 
