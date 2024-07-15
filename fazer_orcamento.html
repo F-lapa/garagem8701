@@ -370,7 +370,6 @@
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 </head>
 <body>
     <div class="container" id="pdf-content">
@@ -772,10 +771,11 @@
     function printOrcamento() {
         const modalContent = document.querySelector('#modalDetalhes .modal-content');
         html2canvas(modalContent, { scale: 2, scrollY: -window.scrollY }).then(canvas => {
-            const imgData = canvas.toDataURL('image/png');
-            const pdf = new jspdf.jsPDF('p', 'mm', 'a4');
-            pdf.addImage(imgData, 'PNG', 0, 0, 210, 297);
-            pdf.save('detalhes_orcamento.pdf');
+            const imgData = canvas.toDataURL('image/jpeg', 1.0);
+            const link = document.createElement('a');
+            link.href = imgData;
+            link.download = 'detalhes_orcamento.jpg';
+            link.click();
         });
     }
 
