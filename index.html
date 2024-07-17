@@ -27,12 +27,36 @@
             width: 100%;
             max-width: 800px; /* Aumenta a largura da área de ícones */
             text-align: center;
+            position: relative; /* Permite posicionamento absoluto para os elementos de fundo */
+            overflow: hidden; /* Esconde os elementos que ultrapassam os limites do container */
+        }
+        .background-design {
+            position: absolute;
+            top: -50px;
+            left: -50px;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            z-index: 0;
+        }
+        .background-design-2 {
+            position: absolute;
+            bottom: -50px;
+            right: -50px;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            z-index: 0;
         }
         .container img {
             width: 100%;
             max-width: 300px; /* Estica a logo para os lados */
             margin-bottom: 30px;
             animation: shine 1.5s infinite;
+            position: relative; /* Mantém a logo acima dos elementos de fundo */
+            z-index: 1;
         }
         @keyframes shine {
             0% {
@@ -52,6 +76,8 @@
             gap: 40px; /* Aumenta o espaço entre os ícones */
             justify-items: center;
             align-items: center;
+            position: relative; /* Mantém os ícones acima dos elementos de fundo */
+            z-index: 1;
         }
         .icon-button {
             position: relative;
@@ -94,6 +120,8 @@
 </head>
 <body>
     <div class="container">
+        <div class="background-design"></div>
+        <div class="background-design-2"></div>
         <img src="LogoGaragem87.png" alt="Logo da Garagem87">
         <div class="icon-container">
             <div class="icon-button" onclick="window.location.href='adicionar_cliente.html'">
