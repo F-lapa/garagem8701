@@ -442,7 +442,6 @@
             </div>
             <div class="modal-body" id="detalhes-modal-body">
             </div>
-            <div id="data-confirmacao" style="font-size: 12px; color: gray; text-align: center; margin-top: 10px;"></div>
         </div>
     </div>
 <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
@@ -624,13 +623,6 @@ async function verDetalhes(id) {
         };
     }));
 
-    let dataConfirmacao = "";
-    if (orcamento.confirmado && orcamento.timestamp) {
-        const timestamp = orcamento.timestamp.toDate();
-        dataConfirmacao = `${timestamp.getDate().toString().padStart(2, '0')}/${(timestamp.getMonth() + 1).toString().padStart(2, '0')}/${timestamp.getFullYear()}`;
-        document.getElementById('data-confirmacao').innerText = `Confirmado em: ${dataConfirmacao}`;
-    }
-
     const detalhesModalBody = document.getElementById('detalhes-modal-body');
     detalhesModalBody.innerHTML = `
         <div id="orcamento-detalhes">
@@ -750,17 +742,12 @@ function exibirOrcamentos(filtro = "") {
         .sort((a, b) => b.timestamp - a.timestamp)
         .forEach(async orcamento => {
             const cliente = await obterCliente(orcamento.nomeCliente);
-            let dataConfirmacao = "";
-            if (orcamento.confirmado && orcamento.timestamp) {
-                const timestamp = orcamento.timestamp.toDate();
-                dataConfirmacao = `${timestamp.getDate().toString().padStart(2, '0')}/${(timestamp.getMonth() + 1).toString().padStart(2, '0')}/${timestamp.getFullYear()}`;
-            }
             const orcamentoItem = document.createElement('div');
             orcamentoItem.className = 'orcamento-item';
             orcamentoItem.innerHTML = `
                 <span onclick="verDetalhes('${orcamento.id}')">${orcamento.nomeCliente || ''} - ${cliente ? cliente.carro : ''}</span>
                 <div>
-                    ${orcamento.confirmado ? `<span class="orcamento-confirmado">Confirmado em: ${dataConfirmacao}</span>` : `
+                    ${orcamento.confirmado ? `<span class="orcamento-confirmado">Confirmado</span>` : `
                     <button onclick="abrirModalConfirmacao('confirmar', '${orcamento.id}')"><i class="fas fa-check"></i></button>
                     `}
                     <button onclick="abrirModalConfirmacao('excluir', '${orcamento.id}')"><i class="fas fa-trash"></i></button>
