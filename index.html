@@ -14,7 +14,7 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background: #1e1e1e; /* Fundo escuro */
+            background: black; /* Fundo preto */
             margin: 0;
             padding: 20px;
             box-sizing: border-box;
@@ -53,7 +53,7 @@
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             grid-template-rows: repeat(2, 1fr);
-            gap: 20px; /* Espaço entre os ícones */
+            gap: 10px; /* Aproxima mais os ícones lado a lado */
             justify-items: center;
             align-items: center;
             position: relative;
@@ -62,9 +62,9 @@
         .icon-card {
             background: #444; /* Fundo dos ícones */
             border-radius: 10px;
-            padding: 20px;
-            width: 140px;
-            height: 140px;
+            padding: 15px;
+            width: 120px; /* Diminui o tamanho dos cartões */
+            height: 120px; /* Diminui o tamanho dos cartões */
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -78,13 +78,13 @@
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
         }
         .icon-card i {
-            font-size: 36px;
+            font-size: 28px; /* Diminui o tamanho dos ícones */
             color: white;
             margin-bottom: 10px;
             text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
         }
         .icon-card span {
-            font-size: 16px;
+            font-size: 14px; /* Diminui o tamanho do texto */
             font-weight: bold;
             color: white;
             text-align: center;
