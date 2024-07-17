@@ -14,13 +14,13 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background: linear-gradient(135deg, #1e1e1e, #383838); /* Gradiente sutil */
+            background: #1e1e1e; /* Fundo escuro */
             margin: 0;
             padding: 20px;
             box-sizing: border-box;
         }
         .container {
-            background: #2c2c2c; /* Fundo escuro */
+            background: linear-gradient(45deg, #8B0000, #B22222); /* Degradê vermelho escuro */
             padding: 50px 60px;
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
@@ -32,7 +32,7 @@
         }
         .container img {
             width: 100%;
-            max-width: 300px;
+            max-width: 300px; /* Estica a logo para os lados */
             margin-bottom: 30px;
             animation: shine 1.5s infinite;
             position: relative;
@@ -50,13 +50,17 @@
             }
         }
         .icon-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 20px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 20px; /* Espaço entre os ícones */
+            justify-items: center;
+            align-items: center;
+            position: relative;
+            z-index: 1;
         }
         .icon-card {
-            background: #444;
+            background: #444; /* Fundo dos ícones */
             border-radius: 10px;
             padding: 20px;
             width: 140px;
@@ -67,6 +71,7 @@
             justify-content: center;
             transition: transform 0.3s, box-shadow 0.3s;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
         }
         .icon-card:hover {
             transform: translateY(-10px);
