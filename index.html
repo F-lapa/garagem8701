@@ -14,7 +14,7 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background: linear-gradient(45deg, #C0C0C0, #D3D3D3); /* Degradê prateado */
+            background: black; /* Fundo preto */
             margin: 0;
             padding: 20px;
             box-sizing: border-box;
@@ -28,27 +28,6 @@
             max-width: 800px; /* Aumenta a largura da área de ícones */
             text-align: center;
             position: relative; /* Permite posicionamento absoluto para os elementos de fundo */
-            overflow: hidden; /* Esconde os elementos que ultrapassam os limites do container */
-        }
-        .background-design {
-            position: absolute;
-            top: -50px;
-            left: -50px;
-            width: 200px;
-            height: 200px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            z-index: 0;
-        }
-        .background-design-2 {
-            position: absolute;
-            bottom: -50px;
-            right: -50px;
-            width: 200px;
-            height: 200px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            z-index: 0;
         }
         .container img {
             width: 100%;
@@ -120,8 +99,6 @@
 </head>
 <body>
     <div class="container">
-        <div class="background-design"></div>
-        <div class="background-design-2"></div>
         <img src="LogoGaragem87.png" alt="Logo da Garagem87">
         <div class="icon-container">
             <div class="icon-button" onclick="window.location.href='adicionar_cliente.html'">
