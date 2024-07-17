@@ -14,27 +14,28 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background: black; /* Fundo preto */
+            background: linear-gradient(135deg, #1e1e1e, #383838); /* Gradiente sutil */
             margin: 0;
             padding: 20px;
             box-sizing: border-box;
         }
         .container {
-            background: linear-gradient(45deg, #8B0000, #B22222); /* Degradê vermelho escuro */
-            padding: 50px 60px; /* Aumenta a área de ícones */
+            background: #2c2c2c; /* Fundo escuro */
+            padding: 50px 60px;
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             width: 100%;
-            max-width: 800px; /* Aumenta a largura da área de ícones */
+            max-width: 800px;
             text-align: center;
-            position: relative; /* Permite posicionamento absoluto para os elementos de fundo */
+            position: relative;
+            overflow: hidden;
         }
         .container img {
             width: 100%;
-            max-width: 300px; /* Estica a logo para os lados */
+            max-width: 300px;
             margin-bottom: 30px;
             animation: shine 1.5s infinite;
-            position: relative; /* Mantém a logo acima dos elementos de fundo */
+            position: relative;
             z-index: 1;
         }
         @keyframes shine {
@@ -49,51 +50,39 @@
             }
         }
         .icon-container {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            grid-template-rows: repeat(2, 1fr);
-            gap: 40px; /* Aumenta o espaço entre os ícones */
-            justify-items: center;
-            align-items: center;
-            position: relative; /* Mantém os ícones acima dos elementos de fundo */
-            z-index: 1;
-        }
-        .icon-button {
-            position: relative;
-            width: 120px; /* Aumenta o tamanho dos botões de ícones */
-            height: 120px; /* Aumenta o tamanho dos botões de ícones */
-            border-radius: 15px;
-            background-color: #8B0000; /* Vermelho escuro */
-            color: white; /* Ícones brancos */
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.3s;
             display: flex;
+            flex-wrap: wrap;
             justify-content: center;
+            gap: 20px;
+        }
+        .icon-card {
+            background: #444;
+            border-radius: 10px;
+            padding: 20px;
+            width: 140px;
+            height: 140px;
+            display: flex;
+            flex-direction: column;
             align-items: center;
-            font-size: 36px; /* Aumenta o tamanho dos ícones */
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            justify-content: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         }
-        .icon-button:hover {
-            background-color: #B22222; /* Cor mais clara ao passar o mouse */
-            transform: scale(1.1);
+        .icon-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
         }
-        .icon-button i {
-            color: white; /* Cor dos ícones */
-            text-shadow: 0 0 10px #ffffff; /* Brilho nos ícones */
+        .icon-card i {
+            font-size: 36px;
+            color: white;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
         }
-        .icon-button span {
-            position: absolute;
-            bottom: -25px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 16px; /* Aumenta o tamanho do texto */
+        .icon-card span {
+            font-size: 16px;
             font-weight: bold;
-            color: white; /* Texto branco */
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        .icon-button:hover span {
-            opacity: 1;
+            color: white;
+            text-align: center;
         }
     </style>
 </head>
@@ -101,19 +90,19 @@
     <div class="container">
         <img src="LogoGaragem87.png" alt="Logo da Garagem87">
         <div class="icon-container">
-            <div class="icon-button" onclick="window.location.href='adicionar_cliente.html'">
+            <div class="icon-card" onclick="window.location.href='adicionar_cliente.html'">
                 <i class="fas fa-user-plus"></i>
                 <span>Adicionar Cliente</span>
             </div>
-            <div class="icon-button" onclick="window.location.href='adicionar_produto.html'">
+            <div class="icon-card" onclick="window.location.href='adicionar_produto.html'">
                 <i class="fas fa-box"></i>
                 <span>Adicionar Produto</span>
             </div>
-            <div class="icon-button" onclick="window.location.href='fazer_orcamento.html'">
+            <div class="icon-card" onclick="window.location.href='fazer_orcamento.html'">
                 <i class="fas fa-file-alt"></i>
                 <span>Fazer Orçamento</span>
             </div>
-            <div class="icon-button" onclick="verificarAutenticacao(function() { window.location.href='sistema.html'; })">
+            <div class="icon-card" onclick="verificarAutenticacao(function() { window.location.href='sistema.html'; })">
                 <i class="fas fa-cash-register"></i>
                 <span>Caixa</span>
             </div>
