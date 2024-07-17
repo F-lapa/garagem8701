@@ -193,8 +193,8 @@
             transform: translate(-50%, -50%);
             width: 100%;
             max-width: 400px;
-            height: auto;
-            overflow: auto;
+            height: 80%; /* Ajusta a altura do modal */
+            overflow: hidden;
             background-color: rgba(0,0,0,0.4);
             padding: 15px;
             box-sizing: border-box;
@@ -210,11 +210,13 @@
             padding: 15px;
             border: 1px solid #888;
             width: 100%;
+            height: 100%; /* Faz o conteúdo ocupar toda a altura do modal */
             max-width: 350px;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             box-sizing: border-box;
             position: relative;
+            overflow-y: auto; /* Adiciona a barra de rolagem */
         }
         .modal-header, .modal-footer {
             display: flex;
