@@ -14,13 +14,13 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background: linear-gradient(45deg, #ff4b2b, #ff416c); /* Degradê em tons de vermelho */
+            background: linear-gradient(45deg, #C0C0C0, #D3D3D3); /* Degradê prateado */
             margin: 0;
             padding: 20px;
             box-sizing: border-box;
         }
         .container {
-            background: #ffffff;
+            background: linear-gradient(45deg, #8B0000, #B22222); /* Degradê vermelho escuro */
             padding: 30px 40px;
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
@@ -56,8 +56,8 @@
             width: 100px;
             height: 100px;
             border-radius: 15px;
-            background-color: #d32f2f;
-            color: white;
+            background-color: #8B0000; /* Vermelho escuro */
+            color: #C0C0C0; /* Ícones prateados */
             cursor: pointer;
             transition: background-color 0.3s, transform 0.3s;
             display: flex;
@@ -67,8 +67,12 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
         .icon-button:hover {
-            background-color: #9a0007;
+            background-color: #B22222; /* Cor mais clara ao passar o mouse */
             transform: scale(1.1);
+        }
+        .icon-button i {
+            color: #C0C0C0; /* Cor dos ícones */
+            text-shadow: 0 0 10px #ffffff; /* Brilho nos ícones */
         }
         .icon-button span {
             position: absolute;
@@ -77,7 +81,7 @@
             transform: translateX(-50%);
             font-size: 14px;
             font-weight: bold;
-            color: #333;
+            color: #C0C0C0; /* Texto prateado */
             opacity: 0;
             transition: opacity 0.3s;
         }
