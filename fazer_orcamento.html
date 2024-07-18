@@ -769,17 +769,18 @@ function gerarPDF() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
 
-    const detalhes = document.getElementById('detalhes-modal-body').innerHTML;
-
+    const modalBody = document.getElementById('detalhes-modal-body');
     const imgData = document.querySelector('#modalDetalhes .modal-header img').src;
     const logoWidth = 50;
     const logoHeight = 25;
 
-    doc.addImage(imgData, 'PNG', 20, 20, logoWidth, logoHeight);
+    doc.addImage(imgData, 'PNG', 10, 10, logoWidth, logoHeight);
 
-    doc.fromHTML(detalhes, 15, 40);
-
-    doc.save('detalhes_orcamento.pdf');
+    html2canvas(modalBody).then((canvas) => {
+        const imgData = canvas.toDataURL('image/png');
+        doc.addImage(imgData, 'PNG', 10, 40, 180, canvas.height * 180 / canvas.width);
+        doc.save('detalhes_orcamento.pdf');
+    });
 }
 
 document.addEventListener('DOMContentLoaded', () => {
