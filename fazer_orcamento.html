@@ -767,9 +767,10 @@ function buscarOrcamentos(event) {
 
 function gerarPDF() {
     const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
+    const doc = new jsPDF('p', 'mm', 'a4');
 
     const modalBody = document.getElementById('detalhes-modal-body');
+    const modalContent = modalBody.innerHTML;
     const imgData = document.querySelector('#modalDetalhes .modal-header img').src;
     const logoWidth = 50;
     const logoHeight = 25;
@@ -778,7 +779,23 @@ function gerarPDF() {
 
     html2canvas(modalBody).then((canvas) => {
         const imgData = canvas.toDataURL('image/png');
-        doc.addImage(imgData, 'PNG', 10, 40, 180, canvas.height * 180 / canvas.width);
+        const imgProps = doc.getImageProperties(imgData);
+        const pdfWidth = doc.internal.pageSize.getWidth();
+        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+        let heightLeft = pdfHeight;
+        let position = 40;
+
+        doc.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfHeight);
+        heightLeft -= doc.internal.pageSize.getHeight() - 40;
+
+        while (heightLeft >= 0) {
+            position = heightLeft - pdfHeight;
+            doc.addPage();
+            doc.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfHeight);
+            heightLeft -= doc.internal.pageSize.getHeight();
+        }
+
         doc.save('detalhes_orcamento.pdf');
     });
 }
