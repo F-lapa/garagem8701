@@ -280,11 +280,12 @@
             margin-top: 8px;
             background: #f9f9f9;
             border: 1px solid #b2dfdb;
+            font-size: 10px; /* Tamanho da fonte reduzido para compactar a tabela */
         }
         .details-table th,
         .details-table td {
             border: 1px solid #b2dfdb;
-            padding: 6px;
+            padding: 4px; /* Padding reduzido para compactar a tabela */
             text-align: left;
         }
         .details-table th {
@@ -626,7 +627,7 @@ async function verDetalhes(id) {
         };
     }));
 
-    const valorTotalProdutos = produtosDetalhados.reduce((total, item) => total + item.preco * item.quantidade, 0);
+    const totalProdutos = produtosDetalhados.reduce((total, produto) => total + (produto.preco * produto.quantidade), 0);
 
     const detalhesModalBody = document.getElementById('detalhes-modal-body');
     detalhesModalBody.innerHTML = `
@@ -647,10 +648,10 @@ async function verDetalhes(id) {
                 <table class="details-table">
                     <thead>
                         <tr>
-                            <th>Quantidade</th>
+                            <th>Qtd.</th> <!-- Reduzido "Quantidade" -->
                             <th>Descrição</th>
                             <th>Valor</th>
-                            <th>Valor Total</th>
+                            <th>Total</th> <!-- Reduzido "Valor Total" -->
                         </tr>
                     </thead>
                     <tbody>
@@ -662,8 +663,8 @@ async function verDetalhes(id) {
                             <td>R$ ${(produto.preco * produto.quantidade).toFixed(2)}</td>
                         `).join('')}
                         <tr>
-                            <td colspan="3" style="text-align:right; font-weight:bold;">Total:</td>
-                            <td style="font-weight:bold;">R$ ${valorTotalProdutos.toFixed(2)}</td>
+                            <td colspan="3"><strong>Total dos Produtos:</strong></td>
+                            <td><strong>R$ ${totalProdutos.toFixed(2)}</strong></td>
                         </tr>
                     </tbody>
                 </table>
@@ -783,7 +784,7 @@ function gerarPDF() {
 
     doc.addImage(imgData, 'PNG', 10, 10, logoWidth, logoHeight);
 
-    html2canvas(modalBody, { scale: 1.0 }).then((canvas) => {
+    html2canvas(modalBody, { scale: 1.5 }).then((canvas) => {
         const imgData = canvas.toDataURL('image/png');
         const pdfWidth = doc.internal.pageSize.getWidth() - 20; // Considerar margens
         const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
