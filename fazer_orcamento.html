@@ -375,6 +375,17 @@
             top: 30px;
             right: 8px;
         }
+        .btn-alterar {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            color: #d32f2f;
+            margin-left: 8px;
+        }
+        .btn-alterar:hover {
+            color: #9a0007;
+        }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -452,6 +463,45 @@
             </div>
         </div>
     </div>
+
+    <div id="modalEditar" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Editar Orçamento</h2>
+                <span class="close" onclick="fecharModal('modalEditar')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="editar-orcamento-form" onsubmit="atualizarOrcamento(event)">
+                    <div class="form-group">
+                        <label for="editar-nome-cliente">Nome do Cliente:</label>
+                        <select id="editar-nome-cliente" name="nome-cliente">
+                            <option value="">Nenhum Cliente</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Produtos:</label>
+                        <div class="product-list" id="editar-product-list">
+                            <!-- Produtos serão carregados aqui -->
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="editar-hodometro">Hodômetro do Veículo:</label>
+                        <input type="number" id="editar-hodometro" name="hodometro" min="0" step="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="editar-descricao-servico">Serviços:</label>
+                        <textarea id="editar-descricao-servico" name="descricao-servico"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="editar-servico">Valor da Mão de Obra:</label>
+                        <input type="number" id="editar-servico" name="servico" min="0" step="0.01" required>
+                    </div>
+                    <button type="submit" class="btn">Atualizar Orçamento</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
 <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js"></script>
 <script>
@@ -472,7 +522,7 @@ const db = firebase.firestore();
 let produtos = [];
 let clientes = [];
 let orcamentos = [];
-let acaoConfirmada = null;
+let orcamentoAtual = null; // Variável para armazenar o orçamento atual para edição
 
 function carregarProdutos() {
     db.collection("produtos").get().then((querySnapshot) => {
@@ -687,6 +737,89 @@ async function verDetalhes(id) {
     abrirModal('modalDetalhes');
 }
 
+function abrirModalEditar(id) {
+    orcamentoAtual = orcamentos.find(orc => orc.id === id);
+    if (orcamentoAtual) {
+        const form = document.getElementById('editar-orcamento-form');
+        form['nome-cliente'].value = orcamentoAtual.nomeCliente;
+        form['hodometro'].value = orcamentoAtual.hodometro || '';
+        form['descricao-servico'].value = orcamentoAtual.descricaoServico;
+        form['servico'].value = orcamentoAtual.servico;
+        
+        const productList = document.getElementById('editar-product-list');
+        productList.innerHTML = '';
+        orcamentoAtual.produtos.forEach(produto => {
+            const productItem = document.createElement('div');
+            productItem.className = 'product-item';
+            productItem.innerHTML = `
+                <select name="produtos">
+                    <option value="">Nenhum Produto</option>
+                </select>
+                <input type="number" name="quantidade" value="${produto.quantidade}" min="1">
+                <div class="remove-product" onclick="removerProduto(this)">-</div>
+            `;
+            productList.appendChild(productItem);
+        });
+        carregarProdutos(); // Recarregar produtos no select
+        abrirModal('modalEditar');
+    }
+}
+
+function atualizarOrcamento(event) {
+    event.preventDefault();
+    if (!orcamentoAtual) return;
+
+    const form = document.getElementById('editar-orcamento-form');
+    const nomeCliente = form['nome-cliente'].value || '';
+    const servico = parseFloat(form.servico.value);
+    const descricaoServico = form['descricao-servico'].value || '';
+    const hodometro = form['hodometro'].value || ''; 
+    const produtosSelecionados = Array.from(form.querySelectorAll('select[name="produtos"]'))
+        .map((select, index) => {
+            const produtoNome = select.value.split(' - ')[0];
+            const produto = produtos.find(prod => prod.produto === produtoNome);
+            if (!produto) {
+                return null;
+            }
+            const quantidade = parseInt(form.querySelectorAll('input[name="quantidade"]')[index].value);
+            if (isNaN(quantidade) || quantidade <= 0) {
+                return null;
+            }
+            return {
+                id: produto.id,
+                produto: produto.produto,
+                quantidade,
+                preco: produto.preco
+            };
+        })
+        .filter(item => item !== null);
+
+    const valorTotalProdutos = produtosSelecionados.reduce((total, item) => {
+        return total + item.preco * item.quantidade;
+    }, 0);
+
+    const valorTotal = parseFloat(servico) + valorTotalProdutos;
+
+    const orcamentoAtualizado = {
+        nomeCliente,
+        servico,
+        descricaoServico,
+        valorTotalProdutos: isNaN(valorTotalProdutos) ? 0 : valorTotalProdutos,
+        valorTotal: isNaN(valorTotal) ? 0 : valorTotal,
+        produtos: produtosSelecionados,
+        hodometro,
+        confirmado: orcamentoAtual.confirmado,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+    };
+
+    db.collection("orcamentos").doc(orcamentoAtual.id).update(orcamentoAtualizado).then(() => {
+        fecharModal('modalEditar');
+        carregarOrcamentos();
+    }).catch(error => {
+        console.error("Erro ao atualizar orçamento:", error);
+    });
+}
+
 function abrirModalConfirmacao(acao, id) {
     const modalTexto = {
         excluir: "Tem certeza que deseja excluir este orçamento?",
@@ -761,6 +894,7 @@ function exibirOrcamentos(filtro = "") {
             orcamentoItem.innerHTML = `
                 <span onclick="verDetalhes('${orcamento.id}')">${orcamento.nomeCliente || ''} - ${cliente ? cliente.carro : ''}</span>
                 <div>
+                    <button class="btn-alterar" onclick="abrirModalEditar('${orcamento.id}')"><i class="fas fa-edit"></i></button>
                     ${orcamento.confirmado ? `<span class="orcamento-confirmado">Confirmado</span>` : `
                     <button onclick="abrirModalConfirmacao('confirmar', '${orcamento.id}')"><i class="fas fa-check"></i></button>
                     `}
