@@ -565,6 +565,8 @@ function carregarClientes() {
             option.textContent = cliente.nome;
             clienteSelect.appendChild(option);
         });
+        const editarClienteSelect = document.getElementById('editar-nome-cliente');
+        editarClienteSelect.innerHTML = clienteSelect.innerHTML; // Preenche o select do modal de edição com os mesmos clientes
     }).catch(error => {
         console.error("Erro ao carregar clientes:", error);
     });
@@ -580,6 +582,22 @@ function adicionarProduto() {
         </select>
         <input type="number" name="quantidade" min="1">
         <div class="add-product" onclick="adicionarProduto()">+</div>
+        <div class="remove-product" onclick="removerProduto(this)">-</div>
+    `;
+    productList.appendChild(productItem);
+    carregarProdutos();
+}
+
+function adicionarProdutoEdicao() {
+    const productList = document.getElementById('editar-product-list');
+    const productItem = document.createElement('div');
+    productItem.className = 'product-item';
+    productItem.innerHTML = `
+        <select name="produtos">
+            <option value="">Nenhum Produto</option>
+        </select>
+        <input type="number" name="quantidade" min="1">
+        <div class="add-product" onclick="adicionarProdutoEdicao()">+</div>
         <div class="remove-product" onclick="removerProduto(this)">-</div>
     `;
     productList.appendChild(productItem);
@@ -756,6 +774,7 @@ function abrirModalEditar(id) {
                     <option value="">Nenhum Produto</option>
                 </select>
                 <input type="number" name="quantidade" value="${produto.quantidade}" min="1">
+                <div class="add-product" onclick="adicionarProdutoEdicao()">+</div>
                 <div class="remove-product" onclick="removerProduto(this)">-</div>
             `;
             productList.appendChild(productItem);
@@ -915,7 +934,6 @@ function gerarPDF() {
     const doc = new jsPDF('p', 'mm', 'a4');
 
     const modalBody = document.getElementById('detalhes-modal-body');
-    const modalContent = modalBody.innerHTML;
     const imgData = document.querySelector('#modalDetalhes .modal-header img').src;
     const logoWidth = 50;
     const logoHeight = 25;
