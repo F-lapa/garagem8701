@@ -941,7 +941,7 @@ function gerarPDF() {
 
     doc.addImage(imgData, 'PNG', 10, 10, logoWidth, logoHeight);
 
-    html2canvas(modalBody, { scale: 1 }).then((canvas) => {
+    html2canvas(modalBody, { scale: 2 }).then((canvas) => {
         const imgData = canvas.toDataURL('image/png');
         const pdfWidth = doc.internal.pageSize.getWidth() - 20;
         const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
