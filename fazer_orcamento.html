@@ -508,7 +508,7 @@
 <script>
 
     const firebaseConfig = {
-   apiKey: "AIzaSyAUQ8VkjzIBQrkc-aBWbhk4FsPVm_DE52o",
+    apiKey: "AIzaSyAUQ8VkjzIBQrkc-aBWbhk4FsPVm_DE52o",
   authDomain: "garagem87-c652e.firebaseapp.com",
   databaseURL: "https://garagem87-c652e-default-rtdb.firebaseio.com",
   projectId: "garagem87-c652e",
@@ -575,20 +575,33 @@ function carregarClientes() {
     });
 }
 
-function adicionarProduto() {
+function adicionarProduto(maintainPrevious = false) {
     const productList = document.getElementById('product-list');
+    const lastProductItem = productList.lastElementChild;
+    let selectedProduct = '';
+    let selectedQuantity = '';
+
+    if (maintainPrevious && lastProductItem) {
+        selectedProduct = lastProductItem.querySelector('select[name="produtos"]').value;
+        selectedQuantity = lastProductItem.querySelector('input[name="quantidade"]').value;
+    }
+
     const productItem = document.createElement('div');
     productItem.className = 'product-item';
     productItem.innerHTML = `
         <select name="produtos">
             <option value="">Nenhum Produto</option>
         </select>
-        <input type="number" name="quantidade" min="1">
-        <div class="add-product" onclick="adicionarProduto()">+</div>
+        <input type="number" name="quantidade" min="1" value="${selectedQuantity}">
+        <div class="add-product" onclick="adicionarProduto(true)">+</div>
         <div class="remove-product" onclick="removerProduto(this)">-</div>
     `;
     productList.appendChild(productItem);
-    carregarProdutos();
+    carregarProdutos(() => {
+        if (maintainPrevious && selectedProduct) {
+            productItem.querySelector('select[name="produtos"]').value = selectedProduct;
+        }
+    });
 }
 
 function adicionarProdutoEdicao() {
