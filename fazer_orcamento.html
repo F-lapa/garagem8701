@@ -939,14 +939,17 @@ function gerarPDF() {
     const logoWidth = 50;
     const logoHeight = 25;
 
-    doc.addImage(imgData, 'PNG', 10, 10, logoWidth, logoHeight);
-
     html2canvas(modalBody, { scale: 2 }).then((canvas) => {
         const imgData = canvas.toDataURL('image/png');
         const pdfWidth = doc.internal.pageSize.getWidth() - 20;
         const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
 
-        doc.addImage(imgData, 'PNG', 10, 40, pdfWidth, pdfHeight);
+        if (pdfHeight > doc.internal.pageSize.getHeight() - 30) {
+            doc.addImage(imgData, 'PNG', 10, 40, pdfWidth, pdfHeight * 0.8);
+        } else {
+            doc.addImage(imgData, 'PNG', 10, 40, pdfWidth, pdfHeight);
+        }
+
         doc.save('detalhes_orcamento.pdf');
     });
 }
