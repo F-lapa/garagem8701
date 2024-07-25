@@ -914,10 +914,10 @@ function exibirOrcamentos(filtro = "") {
             orcamentoItem.innerHTML = `
                 <span onclick="verDetalhes('${orcamento.id}')">${orcamento.nomeCliente || ''} - ${cliente ? cliente.carro : ''}</span>
                 <div>
-                    <button class="btn-alterar" onclick="abrirModalEditar('${orcamento.id}')"><i class="fas fa-edit"></i></button>
                     ${orcamento.confirmado ? `<span class="orcamento-confirmado">Confirmado</span>` : `
                     <button onclick="abrirModalConfirmacao('confirmar', '${orcamento.id}')"><i class="fas fa-check"></i></button>
                     `}
+                    <button class="btn-alterar" onclick="abrirModalEditar('${orcamento.id}')"><i class="fas fa-edit"></i></button>
                     <button onclick="abrirModalConfirmacao('excluir', '${orcamento.id}')"><i class="fas fa-trash"></i></button>
                 </div>
             `;
