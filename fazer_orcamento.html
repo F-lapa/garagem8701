@@ -1007,25 +1007,33 @@
         const logoWidth = 50;
         const logoHeight = 25;
 
+        // Adicionar o logotipo no topo do PDF
         const img = new Image();
         img.src = logoSrc;
         img.onload = function () {
             doc.addImage(img, 'PNG', (doc.internal.pageSize.getWidth() - logoWidth) / 2, 10, logoWidth, logoHeight);
 
+            // Capturar o conteúdo HTML com uma escala maior para alta resolução
             html2canvas(modalBody, { scale: 2 }).then((canvas) => {
                 const imgData = canvas.toDataURL('image/png');
-                const pdfWidth = doc.internal.pageSize.getWidth() - 20;
-                const aspectRatio = canvas.width / canvas.height;
-                const pdfHeight = pdfWidth / aspectRatio;
 
-                if (pdfHeight > doc.internal.pageSize.getHeight() - 30) {
-                    const scaleFactor = (doc.internal.pageSize.getHeight() - 30) / pdfHeight;
-                    doc.addImage(imgData, 'PNG', 10, 40, pdfWidth * scaleFactor, pdfHeight * scaleFactor);
+                // Dimensões do PDF
+                const pdfWidth = doc.internal.pageSize.getWidth() - 20; // Largura do PDF menos margens
+                const pdfHeight = doc.internal.pageSize.getHeight() - 40; // Altura do PDF menos margens e espaço para logo
+
+                // Calcular proporção de redimensionamento para caber em uma página
+                const aspectRatio = canvas.width / canvas.height;
+                const imageHeight = pdfWidth / aspectRatio;
+
+                // Redimensionar imagem para que caiba completamente na página
+                if (imageHeight > pdfHeight) {
+                    const scaleFactor = pdfHeight / imageHeight;
+                    doc.addImage(imgData, 'PNG', 10, 40, pdfWidth * scaleFactor, pdfHeight);
                 } else {
-                    doc.addImage(imgData, 'PNG', 10, 40, pdfWidth, pdfHeight);
+                    doc.addImage(imgData, 'PNG', 10, 40, pdfWidth, imageHeight);
                 }
 
-                doc.setFontSize(10);
+                doc.setFontSize(10); // Definir tamanho da fonte menor para melhor legibilidade
                 doc.save('detalhes_orcamento.pdf');
             });
         };
