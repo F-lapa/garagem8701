@@ -550,6 +550,10 @@
                     estoque: data.estoque
                 };
             });
+
+            // Ordenar produtos em ordem alfabética
+            produtos.sort((a, b) => a.produto.localeCompare(b.produto, 'pt', { sensitivity: 'base' }));
+
             const productSelects = document.querySelectorAll('select[name="produtos"]');
             productSelects.forEach(select => {
                 const selectedValue = select.value;
@@ -1033,7 +1037,6 @@
         carregarOrcamentos();
     });
 
-</script>
 </script>
 </body>
 </html>
